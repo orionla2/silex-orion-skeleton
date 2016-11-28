@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+use Extention\ControllerLoader\ConfigLoad;
 //Request::setTrustedProxies(array('127.0.0.1'));
 
 //$app->get('/', function () use ($app) {
@@ -14,7 +15,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 //->bind('homepage')
 ///;
 
-$app->mount('main', new \Module\main\controllers\MainController());
+
+$config = array(
+    'contrllers' => array(
+        'Main' => array(
+            'name' => 'main',
+            'namespace' => 'Module',
+            'className' => 'MainController'
+        ),
+    ),
+);
+ConfigLoad::loadControllers($config,$app);
 
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
     if ($app['debug']) {
